@@ -1,0 +1,308 @@
+//------------------------------------------------------------------------------
+// zandronumserver.h
+//------------------------------------------------------------------------------
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+// 02110-1301  USA
+//
+//------------------------------------------------------------------------------
+// Copyright (C) 2009 Braden "Blzut3" Obrzut <admin@maniacsvault.net> (skulltagserver.h)
+// Copyright (C) 2012 "Zalewa" <zalewapl@gmail.com>
+//------------------------------------------------------------------------------
+#ifndef DOOMSEEKER_PLUGIN_ZANDRONUMSERVER_H
+#define DOOMSEEKER_PLUGIN_ZANDRONUMSERVER_H
+
+#include "zandronumgameinfo.h"
+
+#include "serverapi/server.h"
+
+#include <QByteArray>
+#include <QColor>
+#include <QString>
+#include <QVector>
+
+#define NUM_ZANDRONUM_GAME_MODIFIERS 2
+#define ST_MAX_TEAMS 4U
+
+class GameClientRunner;
+class RConProtocol;
+class ZandronumServer;
+
+/**
+ * Compares versions of Zandronum.
+ */
+class ZandronumVersion
+{
+public:
+	ZandronumVersion(QString version);
+
+	unsigned short int majorVersion() const { return major; }
+	unsigned short int minorVersion() const { return minor; }
+	unsigned short int revisionVersion() const { return revision; }
+	unsigned int hgVersionDate() const { return hgRevisionDate; }
+	unsigned short int hgVersionTime() const { return hgRevisionTime; }
+
+	bool operator> (const ZandronumVersion &other) const;
+
+protected:
+	static const QRegularExpression versionExpression;
+	QString version;
+
+	unsigned short int major;
+	unsigned short int minor;
+	unsigned short int revision;
+	unsigned short int build;
+	QString tag;
+	unsigned int hgRevisionDate;
+	unsigned short int hgRevisionTime;
+};
+
+class TeamInfo
+{
+public:
+	TeamInfo(QString name = QObject::tr("<< Unknown >>"), QColor color = QColor(0, 0, 0), unsigned int score = 0);
+
+	const QString &name() const { return teamName; }
+	const QColor &color() const { return teamColor; }
+	unsigned int score() const { return teamScore; }
+
+protected:
+	void setName(const QString &name) { teamName = name; }
+	void setColor(const QColor &color) { teamColor = color; }
+	void setScore(int score) { teamScore = score; }
+
+	friend class ZandronumServer;
+
+private:
+	QString teamName;
+	QColor teamColor;
+	unsigned int teamScore;
+};
+
+/**
+ * @brief Container for game server's optionally-segmented challenge reply.
+ *
+ * Zandronum servers can reply to the browser's challenge with more than one UDP
+ * datagram. Such reply is called a segmented reply. This class is a container
+ * for the incoming segments, that may arrive in any order.
+ */
+class SegmentedReply
+{
+public:
+	/**
+	 * Invalid SegmentedReply constructor.
+	 */
+	SegmentedReply() {}
+
+	/**
+	 * Un-segmented constructor.
+	 *
+	 * If the reply has only one segment, use this constructor for
+	 * efficiency. SegmentedReply will already return true on hasAllSegments().
+	 */
+	SegmentedReply(const QByteArray &data);
+
+	/**
+	 * Segmented constructor, preparing space for totalSize and totalSegments.
+	 */
+	SegmentedReply(unsigned totalSegments, unsigned totalSize);
+
+	const QByteArray &data() const { return bytes; }
+
+	/**
+	 * Were all segments inserted already?
+	 */
+	bool hasAllSegments() const
+	{
+		QVector<bool>::const_iterator it = std::find(segments.begin(), segments.end(), false);
+		return it == segments.end();
+	}
+
+	/**
+	 * Returns true if the SegmentedReply anticipates or already contains actual
+	 * data.
+	 */
+	bool isValid() const { return !segments.isEmpty(); }
+
+	/**
+	 * Insert a segment into the SegmentedReply.
+	 *
+	 * Each inserted segment flips a flag in the segments vector basing on the
+	 * segment's `no`. If all segments are inserted, the SegmentedReply will
+	 * return true on hasAllSegments().
+	 *
+	 * Because the bounds of the reply are already known before the first
+	 * segment is inserted, this method checks if the insert goes outside
+	 * those bounds and, if yes, returns `false` without doing anything.
+	 *
+	 * @param no The segment number, starting from 0.
+	 * @param offset The byte offset of the segment into the whole data.
+	 * @param data The data to insert at the offset.
+	 *
+	 * @return true if the insert was within bounds.
+	 */
+	bool insertSegment(unsigned no, unsigned offset, const QByteArray &data);
+
+	unsigned totalSegments() const { return segments.size(); }
+
+	/**
+	 * Returns the total size of the SegmentedReply, either already contained or
+	 * anticipated. This is defined at constructor and doesn't change
+	 * afterwards.
+	 */
+	qint64 size() const { return bytes.size(); }
+
+private:
+	QByteArray bytes;
+	QVector<bool> segments;
+};
+
+struct Challenge
+{
+	struct CollectedGameModeInfo
+	{
+		bool hasTeams = false;
+		uint8_t code = 0;
+		GameMode gameMode;
+		QString serverSentName;
+
+		GameMode resolvedGameMode();
+	};
+
+	SegmentedReply segments;
+	CollectedGameModeInfo gameModeInfo;
+	int numPlayers;
+
+	Challenge() : numPlayers(0)
+	{
+	}
+};
+
+class ZandronumServer : public Server
+{
+	Q_OBJECT
+
+public:
+	enum ZandronumQueryFlags
+	{
+		SQF_NAME = 0x00000001,
+		SQF_URL = 0x00000002,
+		SQF_EMAIL = 0x00000004,
+		SQF_MAPNAME = 0x00000008,
+		SQF_MAXCLIENTS = 0x00000010,
+		SQF_MAXPLAYERS = 0x00000020,
+		SQF_PWADS = 0x00000040,
+		SQF_GAMETYPE = 0x00000080,
+		SQF_GAMENAME = 0x00000100,
+		SQF_IWAD = 0x00000200,
+		SQF_FORCEPASSWORD = 0x00000400,
+		SQF_FORCEJOINPASSWORD = 0x00000800,
+		SQF_GAMESKILL = 0x00001000,
+		SQF_BOTSKILL = 0x00002000,
+		SQF_DMFLAGS = 0x00004000, // Deprecated
+		SQF_LIMITS = 0x00010000,
+		SQF_TEAMDAMAGE = 0x00020000,
+		SQF_TEAMSCORES = 0x00040000, // Deprecated
+		SQF_NUMPLAYERS = 0x00080000,
+		SQF_PLAYERDATA = 0x00100000,
+		SQF_TEAMINFO_NUMBER = 0x00200000,
+		SQF_TEAMINFO_NAME = 0x00400000,
+		SQF_TEAMINFO_COLOR = 0x00800000,
+		SQF_TEAMINFO_SCORE = 0x01000000,
+		SQF_TESTING_SERVER = 0x02000000,
+		SQF_DATA_MD5SUM = 0x04000000, // Deprecated
+		SQF_ALL_DMFLAGS = 0x08000000,
+		SQF_SECURITY_SETTINGS = 0x10000000,
+		SQF_OPTIONAL_WADS = 0x20000000,
+		SQF_DEH = 0x40000000,
+		SQF_EXTENDED_INFO = 0x80000000,
+
+		SQF_STANDARDQUERY =
+			SQF_NAME | SQF_URL | SQF_EMAIL | SQF_MAPNAME | SQF_MAXCLIENTS |
+			SQF_MAXPLAYERS | SQF_PWADS | SQF_GAMETYPE | SQF_IWAD |
+			SQF_FORCEPASSWORD | SQF_FORCEJOINPASSWORD | SQF_LIMITS |
+			SQF_NUMPLAYERS | SQF_PLAYERDATA | SQF_TEAMINFO_NUMBER |
+			SQF_TEAMINFO_NAME | SQF_TEAMINFO_SCORE | SQF_GAMESKILL |
+			SQF_TESTING_SERVER | SQF_ALL_DMFLAGS | SQF_SECURITY_SETTINGS |
+			SQF_OPTIONAL_WADS | SQF_DEH | SQF_EXTENDED_INFO,
+
+		SQF2_PWAD_HASHES = 0x00000001,
+		SQF2_COUNTRY = 0x00000002,
+		SQF2_GAMEMODE_NAME = 0x00000004,
+		SQF2_GAMEMODE_SHORTNAME = 0x00000008,
+		SQF2_VOICECHAT = 0x00000010,
+
+		SQF2_STANDARDQUERY = SQF2_PWAD_HASHES | SQF2_COUNTRY | SQF2_GAMEMODE_NAME
+	};
+
+	ZandronumServer(const QHostAddress &address, unsigned short port);
+
+	ExeFile *clientExe() override;
+
+	GameHost *gameHost();
+	GameClientRunner *gameRunner() override;
+
+	bool hasRcon() const override { return true; }
+
+	QList<GameCVar> modifiers() const override;
+	EnginePlugin *plugin() const override;
+
+	RConProtocol *rcon() override;
+
+	QRgb teamColor(int team) const override;
+	QString teamName(int team) const override;
+
+	PathFinder wadPathFinder() override;
+
+protected slots:
+	void updatedSlot(ServerPtr server, int response);
+
+protected:
+	bool buckshot;
+	bool instagib;
+
+	float teamDamage;
+
+	unsigned short botSkill;
+
+	unsigned short duelLimit;
+	unsigned short fragLimit;
+	unsigned short pointLimit;
+	unsigned short winLimit;
+
+	unsigned int numTeams;
+	TeamInfo teamInfo[ST_MAX_TEAMS];
+
+	QString testingArchive;
+
+	QByteArray createSendRequest();
+	static unsigned int millisecondTime();
+	Response readRequest(const QByteArray &data);
+
+private:
+	Challenge currentChallenge;
+
+	Server::Response readSingleReply(QDataStream &stream);
+	Server::Response readSegmentedReply(QDataStream &stream);
+
+	Server::Response readAccumulatedSegments();
+
+	Server::Response readSqf1(QDataStream &stream);
+	Server::Response readSqf2(QDataStream &stream);
+
+	void resetPwadsList(const QList<PWad> &wads);
+};
+
+#endif

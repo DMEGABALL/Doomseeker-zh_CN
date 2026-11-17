@@ -1,0 +1,25 @@
+<RCC>
+	<qresource prefix="/tests/odamexserver">
+		<!-- Cooperative server on MAP01 with one player. -->
+		<file>odamex_p7_one-player.bin</file>
+
+		<!--
+			Empty team-deathmatch server with two teams, a 10-minute time limit,
+			and TDMAX_B4.WAD.
+		-->
+		<file>odamex_p7_team-deathmatch.bin</file>
+
+		<!-- Empty Deathmatch server on MAP00 with a 10-minute limit and DUEL2020OA.WAD. -->
+		<file>odamex_p7_deathmatch-time-limited.bin</file>
+
+		<!--
+			Derived from odamex_p7_deathmatch-time-limited.bin: remove sv_timelimit
+			and the time-left field, decrementing the CVar count. All other bytes
+			are unchanged. Used for the focused time-limit regression (#4584).
+		-->
+		<file>odamex_p7_deathmatch-time-limit-disabled.bin</file>
+
+		<!-- Empty Deathmatch server on MAP01 with no time limit and GREENWAR.WAD. -->
+		<file>odamex_p7_deathmatch-unlimited.bin</file>
+	</qresource>
+</RCC>

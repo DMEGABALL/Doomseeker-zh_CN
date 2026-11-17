@@ -1,0 +1,6 @@
+build*/
+*.qm
+*.user
+.cache/
+.doomseeker/
+.static/

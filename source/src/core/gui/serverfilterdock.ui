@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ServerFilterDock</class>
+ <widget class="QDockWidget" name="ServerFilterDock">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>284</width>
+    <height>624</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>284</width>
+    <height>307</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Server filter</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QComboBox" name="cboServerFilterPresets">
+        <property name="duplicatesEnabled">
+         <bool>true</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>[custom]</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSavePreset">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Save the current server filter as a preset.</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../media/resources.qrc">
+          <normaloff>:/icons/diskette.png</normaloff>:/icons/diskette.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnRemovePreset">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Remove the server filter preset.</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../media/resources.qrc">
+          <normaloff>:/icons/x.png</normaloff>:/icons/x.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Server name:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="leServerName">
+      <property name="minimumSize">
+       <size>
+        <width>150</width>
+        <height>0</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="cbGroupServersWithPlayersAtTop">
+      <property name="text">
+       <string>Put populated servers on top</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="Line" name="line">
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="cbFilteringEnabled">
+      <property name="text">
+       <string>Filtering enabled</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>220</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>266</width>
+         <height>616</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Max. ping:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spinMaxPing">
+          <property name="toolTip">
+           <string>Set '0' to disable.</string>
+          </property>
+          <property name="correctionMode">
+           <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+          </property>
+          <property name="maximum">
+           <number>9999</number>
+          </property>
+          <property name="singleStep">
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>WADs:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="leWads">
+          <property name="toolTip">
+           <string>Use ',' (a comma) to separate multiple WADs.</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Exclude WADs:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="leExcludeWads">
+          <property name="toolTip">
+           <string>Servers with WADs on this list won't be displayed. Use ',' (a comma) to separate multiple wads.</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Game modes:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="MultiComboBox" name="cboGameMode"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Exclude game modes:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="MultiComboBox" name="cboExcludeGameMode">
+          <property name="toolTip">
+           <string>Selected game modes won't appear on the server list.</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Addresses:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="leAddresses">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Only servers that match these addresses will be displayed. Multiple addresses can be separated by commas (&lt;span style=&quot; font-weight:600;&quot;&gt;,&lt;/span&gt;). Subnets are supported by using the &lt;span style=&quot; font-weight:600;&quot;&gt;ADDR/N&lt;/span&gt; format where &lt;span style=&quot; font-weight:600;&quot;&gt;N&lt;/span&gt; can be a subnet mask or a numerical value for the subnet mask. For IPv4 the subnet can also be specified by omitting the octets. &lt;span style=&quot; font-weight:600;&quot;&gt;192.168.0&lt;/span&gt;, &lt;span style=&quot; font-weight:600;&quot;&gt;192.168.0.0/24&lt;/span&gt; and &lt;span style=&quot; font-weight:600;&quot;&gt;192.168.0.0/255.255.255.0&lt;/span&gt; are all the same.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cbShowFull">
+          <property name="text">
+           <string>Show full servers</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cbShowEmpty">
+          <property name="text">
+           <string>Show empty servers</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cbShowLockedServers">
+          <property name="text">
+           <string>Show password protected servers</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cbShowOnlyValid">
+          <property name="text">
+           <string>Show only valid servers</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="validServersGranularArea" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="leftMargin">
+            <number>20</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="cbShowBannedServers">
+             <property name="toolTip">
+              <string>Show the servers you were banned from.</string>
+             </property>
+             <property name="text">
+              <string>Show banned servers</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="cbShowTooSoonServers">
+             <property name="toolTip">
+              <string>Show the &quot;Refreshed too soon&quot; servers.</string>
+             </property>
+             <property name="text">
+              <string>Show &quot;too soon&quot; servers</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="cbShowNotRespondingServers">
+             <property name="toolTip">
+              <string>&lt;p&gt;Show the servers that didn't respond at all or returned a bad response.&lt;/p&gt;</string>
+             </property>
+             <property name="text">
+              <string>Show not responding servers</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cbShowTestingServers">
+          <property name="text">
+           <string>Show testing servers</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnClear">
+          <property name="text">
+           <string>Reset filter</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MultiComboBox</class>
+   <extends>QComboBox</extends>
+   <header>gui/widgets/multicombobox.h</header>
+   <slots>
+    <signal>valueChanged()</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../../media/resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>btnClear</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>98</x>
+     <y>782</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>210</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>leServerName</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>38</x>
+     <y>392</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinMaxPing</sender>
+   <signal>editingFinished()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>96</x>
+     <y>223</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>61</x>
+     <y>404</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>leWads</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>120</x>
+     <y>277</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>72</x>
+     <y>393</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowFull</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>522</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>159</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowEmpty</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>44</x>
+     <y>551</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>133</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowOnlyValid</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>609</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>138</x>
+     <y>384</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cboGameMode</sender>
+   <signal>valueChanged()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>55</x>
+     <y>385</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>417</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ServerFilterDock</sender>
+   <signal>visibilityChanged(bool)</signal>
+   <receiver>leServerName</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>101</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>leExcludeWads</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>98</x>
+     <y>331</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cboExcludeGameMode</sender>
+   <signal>valueChanged()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>98</x>
+     <y>439</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbFilteringEnabled</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>168</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>164</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowTestingServers</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>163</x>
+     <y>725</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>444</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowLockedServers</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>119</x>
+     <y>580</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>120</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowBannedServers</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>638</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>630</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowTooSoonServers</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>667</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>336</x>
+     <y>662</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowNotRespondingServers</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>696</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>690</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowOnlyValid</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>validServersGranularArea</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>225</x>
+     <y>609</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>15</x>
+     <y>696</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnSavePreset</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>saveFilterAsPreset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>246</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>141</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnRemovePreset</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>removeFilterPreset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>280</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>141</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbGroupServersWithPlayersAtTop</sender>
+   <signal>clicked()</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>141</x>
+     <y>130</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>141</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cboServerFilterPresets</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>selectFilterPreset(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>111</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>122</x>
+     <y>71</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>leAddresses</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>ServerFilterDock</receiver>
+   <slot>emitUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>134</x>
+     <y>481</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>141</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>emitUpdated()</slot>
+  <slot>clear()</slot>
+  <slot>emitUpdated(QString)</slot>
+  <slot>enableFilter()</slot>
+  <slot>saveFilterAsPreset()</slot>
+  <slot>removeFilterPreset()</slot>
+  <slot>selectFilterPreset(int)</slot>
+ </slots>
+</ui>
