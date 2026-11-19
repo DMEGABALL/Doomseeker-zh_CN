@@ -4,6 +4,13 @@
 
 > Simplified Chinese localization for Doomseeker 1.5.3. Short labels are bilingual (`中文 (English)`), long texts are Chinese-only to avoid truncation.
 
+> [!IMPORTANT]
+> **AI 生成声明**  
+> 本项目的**全部译文均由 AI（大语言模型）生成**，人工仅负责制定术语表、提供上下文、校验格式与少量修正。  
+> 译文可能存在不准确、生硬或词不达意之处，欢迎通过 Issue / PR 指正。
+
+---
+
 ![界面截图](screenshot.png)
 
 ## 特性
